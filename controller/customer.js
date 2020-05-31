@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const Customer = require('../models/customer');
 const Product = require("../models/products");
-
+const Flipkart = require('../models/flipkart');
 
 
 // User Signup
@@ -29,10 +29,17 @@ exports.signup = (req, res, next) => {
         return user.save();
     })
     .then(result => {
-        res.status(201).json({
-            message : 'User created',
-            userId : result._id
-        })
+        const token = jwt.sign({
+            email:result.email,
+            userId:result._id.toString()
+        }, 
+        'supersecret', 
+        {expiresIn: '1h'}
+        );
+        res.status(200).json({
+            token:token, 
+            userId:result._id.toString(), 
+            email:result.email})
     })
     .catch(err => {
         if(!err.statusCode){
@@ -41,7 +48,6 @@ exports.signup = (req, res, next) => {
         next(err);
     })
 };
-
 
 exports.login = (req, res, next) => {
     const email = req.body.email;
@@ -96,6 +102,37 @@ exports.fetchCategory = (req, res, next) => {
 };
 
 
+// exports.fetchCategory = (req, res, next) => {
+//     Product.aggregate([{$match: { status: "active" }},{$group: { _id: "$category" }}, {$sort : {total: -1}}])
+//     .then(result => {
+//         console.log(result);
+//         res.status(200).json({
+//             category : result
+//         })
+//     })
+//     .catch(err => {
+//         res.status(401).json({
+//             message: err
+//         })
+//     })
+// };
+
+
+exports.fetchCategoryProduct = (req, res, next) => {
+    const searchItem = req.params.category;
+    Product.find({ $and: [ { "category":`${searchItem}` }, {"status":"active" } ] })
+    .then(result => {
+      console.log(result)
+      res.status(200).json({
+        post : result
+      });
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  };
+
+
 exports.fetchActiveProduct = (req, res, next) => {
     Product.find({"status":"active"})
     .then(result => {
@@ -110,3 +147,51 @@ exports.fetchActiveProduct = (req, res, next) => {
     })
 }
 
+
+exports.fetchBrandProduct = (req, res, next) => {
+    const searchItem = req.body.searchItem;
+    Product.find({$and: [{"brand":`${searchItem}`},{"status":"active"}]})
+    .then(result => {
+        console.log(result)
+        res.status(200).json(
+            {
+        post : result
+        });
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+
+
+
+exports.fecthSingleProduct = (req, res, next) => {
+    const id = req.params._id
+    Product.findById(id)
+    .then(result => {
+        console.log(result)
+        res.status(200).json({
+        post : result
+        });
+    })
+    .catch(err => { 
+        console.log(err)
+    })
+};
+
+
+
+exports.fetchSearchResult = (req, res, next) => {
+    const searchItem = req.body.searchItem;
+    console.log(req.body)
+    Flipkart.find(  { $text : { $search: `${searchItem}` } } )
+    .then(result => {
+      console.log(result)
+      res.status(200).json({
+        post : result
+      });
+    })
+    .catch(err => {
+      console.log(err)
+    })
+};

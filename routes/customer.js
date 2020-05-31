@@ -1,7 +1,7 @@
 const express = require('express');
 const {body} = require('express-validator');
 
-const {signup, login, fetchActiveProduct, fetchCategory} = require('../controller/customer');
+const {signup, login, fetchActiveProduct, fetchBrandProduct, fetchCategory, fetchCategoryProduct, fecthSingleProduct, fetchSearchResult} = require('../controller/customer');
 
 const Customer = require('../models/customer');
 const router = express.Router();
@@ -28,8 +28,15 @@ router.post('/login', login);
 
 // Fetch active category
 router.get('/category', fetchCategory);
-
+router.get('/category/:category', fetchCategoryProduct);
+router.get('/product/:_id', fecthSingleProduct);
 // Fetch active products
 router.get('/active/product', fetchActiveProduct);
+
+router.post('/brand/product', fetchBrandProduct);
+
+
+//compare produict
+router.post('/compare/product', fetchSearchResult);
 
 module.exports = router; 
