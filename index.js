@@ -1,3 +1,5 @@
+const port = process.env.PORT || 8080;
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -34,8 +36,8 @@ app.use((error, req, res, next) => {
 mongoose.connect(
     'mongodb+srv://webscraping:Qwerty123@clusterscraping-eukyu.mongodb.net/test?retryWrites=true&w=majority'
 ).then(result => {
-    app.listen(8080, () => {
-        console.log("Server running at http://localhost:8080");
+    app.listen(port, () => {
+        console.log("Server running at "+port);
     })
 })
 .catch(err => console.log(err))
