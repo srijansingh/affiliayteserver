@@ -195,3 +195,19 @@ exports.fetchSearchResult = (req, res, next) => {
       console.log(err)
     })
 };
+
+
+exports.fetchActiveSearchResult = (req, res, next) => {
+    const searchItem = req.body.searchItem;
+    console.log(req.body)
+    Product.find({$and:[{ $text: { $search: `${searchItem}` } }, {"status":"active"}]})
+    .then(result => {
+      console.log(result)
+      res.status(200).json({
+        post : result
+      });
+    })
+    .catch(err => {
+      console.log(err)
+    })
+};
