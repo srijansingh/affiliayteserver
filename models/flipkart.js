@@ -9,6 +9,9 @@ const amazonSchema = new mongoose.Schema({
     },
     price : {
         type : String
+    },
+    image : {
+        type: String
     }
 },{
     timestamps : true

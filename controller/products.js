@@ -1,6 +1,26 @@
 const Product = require("../models/products");
+const Category = require("../models/category");
+const Customer = require("../models/customer");
 
 //Product 
+
+exports.insertCategory = (req, res, next) => {
+  const subCategory = req.body.subcategory;
+  const category = req.body.category;
+
+  const cat = new Category({
+    subcategory:subCategory,
+    category:category
+  })
+
+  cat.save()
+  .then(result => {
+    res.status(200).json({
+      post : result
+    });
+  });
+}
+
 
 exports.getAllProduct = (req, res, next) => {
     Product.find()
@@ -207,3 +227,20 @@ exports.countBrand = (req, res, next) => {
 }
 
 // Count Finish
+
+
+//Get All Customer
+
+exports.getAllCustomer = (req, res, next) => {
+  Customer.find()
+  .then(result => {
+    console.log(result)
+    res.status(200).json(
+        {
+      post : result
+    });
+  })
+  .catch(err => {
+    console.log(err)
+  })
+};

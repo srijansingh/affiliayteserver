@@ -1,6 +1,8 @@
 const express = require('express');
 
-const {getAllProduct,
+const {
+    insertCategory,
+    getAllProduct,
     getSingleProduct,
     getAllActiveProduct, 
     getAllCategory, 
@@ -12,12 +14,16 @@ const {getAllProduct,
     countActive,
     countBrand,
     countCat,
-    getBrandProduct
+    getBrandProduct,
+    getAllCustomer
     } = require("../controller/products");
 
 const isAdmin = require('../middleware/isAdmin');
 
 const router = express.Router();
+
+//Insert category for scrapping
+router.post('/scrapper',insertCategory);
 
 // Get All Product EndPoint
 router.get('/product',isAdmin, getAllProduct);
@@ -41,6 +47,9 @@ router.put('/update/active',isAdmin, activePosts);
 router.get('/count', isAdmin, countAll)
 router.get('/countcat', isAdmin, countCat)
 router.get('/countbrand',isAdmin, countBrand)
-router.get('/countactive',isAdmin, countActive)
+router.get('/countactive',isAdmin, countActive);
+
+// Customer information routes
+router.get('/customer', getAllCustomer);
 
 module.exports = router;
