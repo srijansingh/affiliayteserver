@@ -22,6 +22,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoute);
 app.use('/api', productRoute);
 app.use('/user', customerRoute);
+app.get('/', (req, res) => res.send('Hello World with port 8080!'))
 // Routes
 
 
